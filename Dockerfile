@@ -45,7 +45,6 @@ RUN npm ci --omit=dev && npm cache clean --force
 COPY --from=builder --chown=nloms:nodejs /app/src ./src
 COPY --from=builder --chown=nloms:nodejs /app/migrations ./migrations
 COPY --from=builder --chown=nloms:nodejs /app/scripts ./scripts
-COPY --from=builder --chown=nloms:nodejs /app/server.js ./
 COPY --from=builder --chown=nloms:nodejs /app/.env.example ./
 
 # Create necessary directories
@@ -67,4 +66,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
 ENTRYPOINT ["tini", "--"]
 
 # Start the application
-CMD ["node", "server.js"]
+CMD ["node", "src/server.js"]
