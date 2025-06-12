@@ -103,41 +103,16 @@ class DatabaseMigrator {
       console.log('⚡ Executing database migration...');
       console.log('⏳ This may take a few moments...');
 
-      // Begin transaction
-      await this.pool.query('BEGIN');
-      
       try {
-        // Execute migration in chunks for better error reporting
-        const statements = migrationSQL
-          .split(';')
-          .map(stmt => stmt.trim())
-          .filter(stmt => stmt.length > 0 && !stmt.startsWith('--'));
-
-        console.log(`🔄 Executing ${statements.length} SQL statements...`);
-
-        for (let i = 0; i < statements.length; i++) {
-          const statement = statements[i];
-          if (statement.length > 0) {
-            try {
-              await this.pool.query(statement);
-              if (i % 10 === 0) {
-                console.log(`   ✓ Completed ${i + 1}/${statements.length} statements`);
-              }
-            } catch (error) {
-              console.error(`❌ Error in statement ${i + 1}:`, statement.substring(0, 100) + '...');
-              throw error;
-            }
-          }
-        }
-
-        // Commit transaction
-        await this.pool.query('COMMIT');
-        console.log('✅ Migration transaction committed successfully');
+        // Execute the entire migration as one transaction for better reliability
+        console.log('🔄 Executing migration script...');
+        await this.pool.query(migrationSQL);
+        console.log('✅ Migration executed successfully');
 
       } catch (error) {
-        // Rollback on error
-        await this.pool.query('ROLLBACK');
-        console.error('🔄 Migration rolled back due to error');
+        console.error('❌ Migration execution failed:', error.message);
+        console.error('🔍 Error details:', error.detail || 'No additional details');
+        console.error('💡 Hint:', error.hint || 'No hints available');
         throw error;
       }
 
