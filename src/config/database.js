@@ -1,9 +1,17 @@
 const { Pool } = require('pg');
 const logger = require('./winston');
 
+// Get database URL from various possible environment variables
+const getDatabaseUrl = () => {
+  return process.env.DATABASE_URL || 
+         process.env.DATABASE_DATABASE_URL || 
+         process.env.HEROKU_POSTGRESQL_DATABASE_URL ||
+         'postgresql://localhost:5432/nloms_db'; // fallback for development
+};
+
 // Database configuration
 const dbConfig = {
-  connectionString: process.env.DATABASE_URL,
+  connectionString: getDatabaseUrl(),
   ssl: process.env.NODE_ENV === 'production' ? {
     rejectUnauthorized: false
   } : false,

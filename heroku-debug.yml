@@ -1,0 +1,22 @@
+# Use this temporarily to debug environment variables
+# Replace heroku.yml with this content, deploy, then check logs
+# Remember to switch back to the original afterward
+
+setup:
+  addons:
+    - plan: heroku-postgresql:hobby-dev
+  config:
+    NODE_ENV: production
+    NPM_CONFIG_PRODUCTION: true
+
+build:
+  docker:
+    web: Dockerfile
+
+release:
+  command:
+    - node scripts/debug-env.js
+  image: web
+
+run:
+  web: node server.js

@@ -16,15 +16,20 @@ class DatabaseMigrator {
     console.log(`🔧 Node Version: ${process.version}`);
     console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
     
-    if (!process.env.DATABASE_URL) {
-      console.error('❌ ERROR: DATABASE_URL environment variable is not set');
+    // Check for various possible database URL environment variables
+    const databaseUrl = process.env.DATABASE_URL || process.env.DATABASE_DATABASE_URL || process.env.HEROKU_POSTGRESQL_DATABASE_URL;
+    
+    if (!databaseUrl) {
+      console.error('❌ ERROR: No database URL environment variable found');
+      console.error('   Checked: DATABASE_URL, DATABASE_DATABASE_URL, HEROKU_POSTGRESQL_DATABASE_URL');
+      console.error('   Available env vars:', Object.keys(process.env).filter(key => key.includes('DATABASE')).join(', ') || 'none');
       process.exit(1);
     }
 
     console.log('🔗 Database URL found, initializing connection...');
     
     this.pool = new Pool({
-      connectionString: process.env.DATABASE_URL,
+      connectionString: databaseUrl,
       ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
       connectionTimeoutMillis: 30000,
       idleTimeoutMillis: 10000,
