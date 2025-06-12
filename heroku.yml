@@ -1,21 +1,19 @@
-build:
-  docker:
-    web: Dockerfile
-  config:
-    NODE_ENV: production
-    NPM_CONFIG_PRODUCTION: true
-
 setup:
   addons:
     - plan: heroku-postgresql:hobby-dev
       as: DATABASE
-    - plan: heroku-redis:hobby-dev
-      as: REDIS
+  config:
+    NODE_ENV: production
+    NPM_CONFIG_PRODUCTION: true
+
+build:
+  docker:
+    web: Dockerfile
 
 release:
-  image: web
   command:
-    - npm run migrate
+    - psql $DATABASE_URL < migrations/init.sql
+  image: web
 
 run:
-  web: npm start
+  web: node server.js
