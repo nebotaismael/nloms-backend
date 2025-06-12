@@ -42,21 +42,9 @@ app.use(helmet({
   crossOriginEmbedderPolicy: false
 }));
 
-// CORS configuration
+// CORS configuration - Allow all origins
 const corsOptions = {
-  origin: function (origin, callback) {
-    const allowedOrigins = [
-      'http://localhost:3000',
-      'https://your-frontend-domain.com',
-      'https://your-heroku-app.herokuapp.com'
-    ];
-    
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: true, // Allow all origins
   credentials: true,
   optionsSuccessStatus: 200
 };
@@ -119,7 +107,7 @@ const swaggerOptions = {
     servers: [
       {
         url: process.env.NODE_ENV === 'production' 
-          ? 'https://your-heroku-app.herokuapp.com/api'
+          ? 'https://nloms-backend-e20d376292bc.herokuapp.com/api'
           : 'http://localhost:8080/api',
         description: process.env.NODE_ENV === 'production' ? 'Production server' : 'Development server'
       }
