@@ -416,10 +416,10 @@ JOIN land_parcels lp ON lr.land_parcel_id = lp.land_parcel_id
 JOIN users u ON lr.user_id = u.user_id
 WHERE lr.status = 'pending';
 
--- Grant permissions
-GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO nloms_app_user;
-GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO nloms_app_user;
-GRANT SELECT ON ALL TABLES IN SCHEMA public TO nloms_read_user;
+-- Grant permissions (commented out for Heroku deployment)
+-- GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO nloms_app_user;
+-- GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO nloms_app_user;
+-- GRANT SELECT ON ALL TABLES IN SCHEMA public TO nloms_read_user;
 
 -- Create database user roles (run these separately with appropriate privileges)
 -- CREATE ROLE nloms_app_user WITH LOGIN PASSWORD 'secure_app_password';
