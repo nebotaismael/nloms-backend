@@ -108,10 +108,10 @@ const {
 /**
  * @swagger
  * tags:
- *   name: Land Management
- *   description: Land parcel management endpoints
- *   name: Land Applications
- *   description: Land registration application endpoints
+ *   - name: Land Management
+ *     description: Land parcel management endpoints
+ *   - name: Land Applications
+ *     description: Land registration application endpoints
  */
 
 // Land Parcel Routes

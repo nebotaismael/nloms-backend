@@ -13,7 +13,7 @@ const logger = require('./config/winston');
 const { connectDB, testConnection } = require('./config/database');
 
 // Import middleware
-const errorHandler = require('./middleware/error.middleware');
+const { globalErrorHandler } = require('./middleware/error.middleware');
 const notFound = require('./middleware/notFound.middleware');
 
 // Import routes
@@ -159,7 +159,7 @@ app.get('/', (req, res) => {
 
 // Error handling middleware
 app.use(notFound);
-app.use(errorHandler);
+app.use(globalErrorHandler);
 
 // Database connection and server startup
 const PORT = process.env.PORT || 8080;
