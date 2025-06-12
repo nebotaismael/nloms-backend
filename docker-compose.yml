@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://nloms:password@db:5432/nloms_db
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=your-super-secret-jwt-key
+      - CLOUDINARY_CLOUD_NAME=do2xgc8cc
+      - CLOUDINARY_API_KEY=528954193322154
+      - CLOUDINARY_API_SECRET=toRT_WcpV71UrJnLTolLoip5BG8
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - ./uploads:/app/uploads
+    networks:
+      - nloms-network
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=nloms_db
+      - POSTGRES_USER=nloms
+      - POSTGRES_PASSWORD=password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./migrations/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - nloms-network
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - nloms-network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  nloms-network:
+    driver: bridge
