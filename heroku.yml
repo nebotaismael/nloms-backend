@@ -12,7 +12,7 @@ build:
 
 release:
   command:
-    - psql $DATABASE_URL < migrations/init.sql
+    - node scripts/migrate.js
   image: web
 
 run:

@@ -16,8 +16,13 @@ COPY . .
 # Production stage
 FROM node:18-alpine AS production
 
-# Install dumb-init for proper signal handling
-RUN apk add --no-cache dumb-init
+# Install system dependencies including PostgreSQL client and curl
+RUN apk add --no-cache \
+    dumb-init \
+    postgresql-client \
+    curl \
+    bash \
+    && rm -rf /var/cache/apk/*
 
 # Create app user for security
 RUN addgroup -g 1001 -S nodejs && \
@@ -40,8 +45,9 @@ RUN rm -rf node_modules/.cache \
     && rm -rf /tmp/* \
     && rm -rf /root/.npm
 
-# Create logs directory
-RUN mkdir -p logs && chown nloms:nodejs logs
+# Create logs directory and set permissions
+RUN mkdir -p logs uploads && \
+    chown -R nloms:nodejs logs uploads
 
 # Switch to non-root user
 USER nloms
